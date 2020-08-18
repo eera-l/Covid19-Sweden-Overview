@@ -28,7 +28,7 @@ def json_decode(str):
 
 def load_sweden_total(date):
     URL = "https://c19.se/"
-    javascript = get_javascript(URL, 8, False)
+    javascript = get_javascript(URL, 10, False)
     cleaned_string = clean_javascript(javascript,
                                       [r'.*Highcharts.chart\(\'container\',{exporting: ',
                                        r'onclick:\s*function\s*\(\){this\.update\({\s*yAxis:\[{type: \'linear\'},\s*' +
@@ -42,7 +42,7 @@ def load_sweden_total(date):
 
 def load_sweden_deaths(date):
     URL = "https://c19.se/"
-    javascript = get_javascript(URL, 8, False)
+    javascript = get_javascript(URL, 10, False)
     cleaned_string = clean_javascript(javascript,
                                       [r'.*Highcharts.chart\(\'container\',{exporting: ',
                                        r'onclick:\s*function\s*\(\){this\.update\({\s*yAxis:\[{type: \'linear\'},\s*' +
@@ -56,7 +56,7 @@ def load_sweden_deaths(date):
 
 def load_sweden_hosp(date):
     URL = "https://c19.se/"
-    javascript = get_javascript(URL, 8, False)
+    javascript = get_javascript(URL, 10, False)
     cleaned_string = clean_javascript(javascript,
                                       [r'.*Highcharts.chart\(\'container\',{exporting: ',
                                        r'onclick:\s*function\s*\(\){this\.update\({\s*yAxis:\[{type: \'linear\'},\s*' +
@@ -70,7 +70,7 @@ def load_sweden_hosp(date):
 
 def load_sweden_icu(date):
     URL = "https://c19.se/"
-    javascript = get_javascript(URL, 8, False)
+    javascript = get_javascript(URL, 10, False)
     cleaned_string = clean_javascript(javascript,
                                       [r'.*Highcharts.chart\(\'container\',{exporting: ',
                                        r'onclick:\s*function\s*\(\){this\.update\({\s*yAxis:\[{type: \'linear\'},\s*' +
