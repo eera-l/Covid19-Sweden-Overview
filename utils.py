@@ -26,7 +26,18 @@ def json_decode(str):
     return demjson.decode(str)
 
 
-def load_sweden_total(date):
+def fetch_index_sweden(info: str) -> int:
+    if info == 'total':
+        return 0
+    elif info == 'deaths':
+        return 2
+    elif info == 'icu':
+        return 4
+    elif info == 'hospital':
+        return 5
+
+
+def load_sweden_data(date: int, info: str) -> np.ndarray:
     URL = "https://c19.se/"
     javascript = get_javascript(URL, 10, False)
     cleaned_string = clean_javascript(javascript,
@@ -37,52 +48,11 @@ def load_sweden_total(date):
                                        r'{type: \'logarithmic\'}\]\s*}\)\s*}}}',
                                           r'\);.*'])
     j = json_decode(cleaned_string)
-    return np.array([item['y'] for item in j['series'][0]['data']])[date:]
+    index = fetch_index_sweden(info)
+    return np.array([item['y'] for item in j['series'][index]['data']])[date:]
 
 
-def load_sweden_deaths(date):
-    URL = "https://c19.se/"
-    javascript = get_javascript(URL, 10, False)
-    cleaned_string = clean_javascript(javascript,
-                                      [r'.*Highcharts.chart\(\'container\',{exporting: ',
-                                       r'onclick:\s*function\s*\(\){this\.update\({\s*yAxis:\[{type: \'linear\'},\s*' +
-                                       r'{type: \'linear\'}\]\s*}\)\s*',
-                                       r'onclick:\s*function\s*\(\){this\.update\({\s*yAxis:\[{type: \'logarithmic\'},\s*' +
-                                       r'{type: \'logarithmic\'}\]\s*}\)\s*}}}',
-                                       r'\);.*'])
-    j = json_decode(cleaned_string)
-    return np.array([item['y'] for item in j['series'][2]['data']])[date:]
-
-
-def load_sweden_hosp(date):
-    URL = "https://c19.se/"
-    javascript = get_javascript(URL, 10, False)
-    cleaned_string = clean_javascript(javascript,
-                                      [r'.*Highcharts.chart\(\'container\',{exporting: ',
-                                       r'onclick:\s*function\s*\(\){this\.update\({\s*yAxis:\[{type: \'linear\'},\s*' +
-                                       r'{type: \'linear\'}\]\s*}\)\s*',
-                                       r'onclick:\s*function\s*\(\){this\.update\({\s*yAxis:\[{type: \'logarithmic\'},\s*' +
-                                       r'{type: \'logarithmic\'}\]\s*}\)\s*}}}',
-                                       r'\);.*'])
-    j = json_decode(cleaned_string)
-    return np.array([item['y'] for item in j['series'][5]['data']])[date:]
-
-
-def load_sweden_icu(date):
-    URL = "https://c19.se/"
-    javascript = get_javascript(URL, 10, False)
-    cleaned_string = clean_javascript(javascript,
-                                      [r'.*Highcharts.chart\(\'container\',{exporting: ',
-                                       r'onclick:\s*function\s*\(\){this\.update\({\s*yAxis:\[{type: \'linear\'},\s*' +
-                                       r'{type: \'linear\'}\]\s*}\)\s*',
-                                       r'onclick:\s*function\s*\(\){this\.update\({\s*yAxis:\[{type: \'logarithmic\'},\s*' +
-                                       r'{type: \'logarithmic\'}\]\s*}\)\s*}}}',
-                                       r'\);.*'])
-    j = json_decode(cleaned_string)
-    return np.array([item['y'] for item in j['series'][4]['data']])[date:]
-
-
-def load_norway_total():
+def load_norway_total() -> np.ndarray:
     URL = "https://www.worldometers.info/coronavirus/country/norway/"
     javascript = get_javascript(URL, 7, True)
     cleaned_string = clean_javascript(javascript,
@@ -92,7 +62,7 @@ def load_norway_total():
     return np.array(j['series'][0]['data'])[26:]
 
 
-def load_norway_active():
+def load_norway_active() -> np.ndarray:
     URL = "https://www.worldometers.info/coronavirus/country/norway/"
     javascript = get_javascript(URL, 9, True)
     cleaned_string = clean_javascript(javascript,
@@ -102,7 +72,7 @@ def load_norway_active():
     return np.array(j['series'][0]['data'])[26:]
 
 
-def load_norway_deaths():
+def load_norway_deaths() -> np.ndarray:
     URL = "https://www.worldometers.info/coronavirus/country/norway/"
     javascript = get_javascript(URL, 10, True)
     cleaned_string = clean_javascript(javascript,
@@ -112,7 +82,7 @@ def load_norway_deaths():
     return np.array(j['series'][0]['data'])[26:]
 
 
-def load_denmark_total():
+def load_denmark_total() -> np.ndarray:
     URL = "https://www.worldometers.info/coronavirus/country/denmark/"
     javascript = get_javascript(URL, 9, True)
     cleaned_string = clean_javascript(javascript,
@@ -122,7 +92,7 @@ def load_denmark_total():
     return np.array(j['series'][0]['data'])[26:]
 
 
-def load_denmark_active():
+def load_denmark_active() -> np.ndarray:
     URL = "https://www.worldometers.info/coronavirus/country/denmark/"
     javascript = get_javascript(URL, 11, True)
     cleaned_string = clean_javascript(javascript,
@@ -132,7 +102,7 @@ def load_denmark_active():
     return np.array(j['series'][0]['data'])[26:]
 
 
-def load_denmark_deaths():
+def load_denmark_deaths() -> np.ndarray:
     URL = "https://www.worldometers.info/coronavirus/country/denmark/"
     javascript = get_javascript(URL, 12, True)
     cleaned_string = clean_javascript(javascript,
@@ -142,7 +112,7 @@ def load_denmark_deaths():
     return np.array(j['series'][0]['data'])[26:]
 
 
-def load_finland_total():
+def load_finland_total() -> np.ndarray:
     URL = "https://www.worldometers.info/coronavirus/country/finland/"
     javascript = get_javascript(URL, 9, True)
     cleaned_string = clean_javascript(javascript,
@@ -152,7 +122,7 @@ def load_finland_total():
     return np.array(j['series'][0]['data'])[26:]
 
 
-def load_finland_active():
+def load_finland_active() -> np.ndarray:
     URL = "https://www.worldometers.info/coronavirus/country/finland/"
     javascript = get_javascript(URL, 11, True)
     cleaned_string = clean_javascript(javascript,
@@ -162,7 +132,7 @@ def load_finland_active():
     return np.array(j['series'][0]['data'])[26:]
 
 
-def load_finland_deaths():
+def load_finland_deaths() -> np.ndarray:
     URL = "https://www.worldometers.info/coronavirus/country/finland/"
     javascript = get_javascript(URL, 12, True)
     cleaned_string = clean_javascript(javascript,
@@ -172,50 +142,29 @@ def load_finland_deaths():
     return np.array(j['series'][0]['data'])[26:]
 
 
-def load_italy_total(date):
+def fetch_italian_header(info: str) -> str:
+    if info == 'total':
+        return 'totale_casi'
+    elif info == 'positive':
+        return 'totale_positivi'
+    elif info == 'hospital':
+        return 'totale_ospedalizzati'
+    elif info == 'icu':
+        return 'terapia_intensiva'
+    elif info == 'deaths':
+        return 'deceduti'
+
+
+def load_italy_cases(date: int, info: str) -> np.ndarray:
     with urllib.request.urlopen("https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-json/dpc-covid19-ita-andamento-nazionale.json") as url:
         data = json.loads(url.read().decode())
-    return np.array([item['totale_casi'] for item in data])[date:]
+    header = fetch_italian_header(info)
+    return np.array([item[header] for item in data])[date:]
 
 
-def load_italy_active(date):
-    with urllib.request.urlopen("https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-json/dpc-covid19-ita-andamento-nazionale.json") as url:
+def load_cases_by_region(date: int, region: str) -> np.ndarray:
+    with urllib.request.urlopen(
+            "https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-json/dpc-covid19-ita-regioni.json") as url:
         data = json.loads(url.read().decode())
-    return np.array([item['totale_positivi'] for item in data])[date:]
-
-
-def load_italy_hosp(date):
-    with urllib.request.urlopen("https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-json/dpc-covid19-ita-andamento-nazionale.json") as url:
-        data = json.loads(url.read().decode())
-    return np.array([item['totale_ospedalizzati'] for item in data])[date:]
-
-
-def load_italy_icu(date):
-    with urllib.request.urlopen("https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-json/dpc-covid19-ita-andamento-nazionale.json") as url:
-        data = json.loads(url.read().decode())
-    return np.array([item['terapia_intensiva'] for item in data])[date:]
-
-
-def load_italy_deaths(date):
-    with urllib.request.urlopen("https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-json/dpc-covid19-ita-andamento-nazionale.json") as url:
-        data = json.loads(url.read().decode())
-    return np.array([item['deceduti'] for item in data])[date:]
-
-
-def load_lombardy_active(date):
-    with urllib.request.urlopen("https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-json/dpc-covid19-ita-regioni.json") as url:
-        data = json.loads(url.read().decode())
-    return np.array([item['totale_positivi'] for item in data if item['denominazione_regione'] == 'Lombardia'])[date:]
-
-
-def load_emilia_active(date):
-    with urllib.request.urlopen("https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-json/dpc-covid19-ita-regioni.json") as url:
-        data = json.loads(url.read().decode())
-    return np.array([item['totale_positivi'] for item in data if item['denominazione_regione'] == 'Emilia-Romagna'])[date:]
-
-
-def load_veneto_active(date):
-    with urllib.request.urlopen("https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-json/dpc-covid19-ita-regioni.json") as url:
-        data = json.loads(url.read().decode())
-    return np.array([item['totale_positivi'] for item in data if item['denominazione_regione'] == 'Veneto'])[date:]
+    return np.array([item['totale_positivi'] for item in data if item['denominazione_regione'] ==  region])[date:]
 
